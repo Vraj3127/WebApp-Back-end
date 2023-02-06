@@ -35,27 +35,69 @@ const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const client = new MongoClient(uri, { serverApi: ServerApiVersion.v1 });
 let db = client.db(dbName);
 
-//app.use(express.static("images"));
 
+const imagepath = path.join(__dirname,"images");
+app.use(express.static(imagepath));
 
 app.param('collectionName', function (req, res, next, collectionName) {
   req.collection = db.collection(collectionName);
   return next();
 });
 
-// app.get('/', function(req, res, next){
-//   res.send('Select function, e.g., /collections/products')
-// });
+app.get('/', function(req, res, next){
+  res.send('Select function, e.g., /collections/products')
+});
 
 app.get('/collections/:collectionName', function (req, res, next) {
   req.collection.find({}).toArray(function (err, results) {
     if (err) {
       return next(err);
     }
+    if(results.length==0){
+      return next();
+    }
+    else{
     res.send(results);
+    }
   });
 });
 
+app.put('/collections/:collectionName/:id',function (req,res,next){
+  console.log(req.params.id)
+  let idd=parseInt(req.params.id);
+  req.collection.updateOne({id:idd},
+      {$set:req.body},
+      {safe:true,multi:false},function(err,result){
+
+          if(err){
+              return next(err);
+          }
+          res.send(result);
+      });
+});
+
+app.post('/collections/:collectionName',function (req,res,next){
+  req.collection.insertOne(req.body,(function(err,results){
+      if(err){
+          return next(err);
+      }
+      res.send("Updated");
+  }));
+});
+ 
+
+
+app.get('/collections/:collectionName/search',function (req,res,next){
+  let searchword=req.query.q;
+  req.collection.find({subject:
+          {$regex:new RegExp(searchword)}}).toArray(function(err,results){
+      if(err){
+          return next(err);
+      }
+          res.send(results);
+          });
+
+});
 app.use(function (req, res) {
   res.status(404).send("No data found");
 });
