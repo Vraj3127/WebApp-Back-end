@@ -81,7 +81,7 @@ app.post('/collections/:collectionName',function (req,res,next){
       if(err){
           return next(err);
       }
-      res.send(result);
+      res.send("success");
   }));
 });
  
