@@ -2,7 +2,7 @@
 
 Frontend Link Vue.js : https://github.com/Vraj3127/WebApp-Frot-end
 
-Github Pages link : https://vraj3127.github.io/WebApp-Frot-end/public.index
+Github Pages link : https://vraj3127.github.io/WebApp-Frot-end/public/index.html
 
 Backend Link Express.js : https://github.com/Vraj3127/WebApp-Back-end
 
